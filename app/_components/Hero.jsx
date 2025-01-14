@@ -5,7 +5,7 @@ const Hero = () => {
     <section className=" text-[#f1f1f1] py-16 px-6 h-[50vh] lg:h-[80vh] items-center grid text-center">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-[#00d9d9]">
-          Design Your GitHub Commit Art
+          Design Your GitHub Contributions
         </h1>
         <p className="text-lg sm:text-xl mb-6 text-[#b0b0b0]">
           Give your Github Commits Beauty, a Pattern and a Style
