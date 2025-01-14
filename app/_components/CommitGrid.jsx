@@ -45,13 +45,6 @@ const CommitGrid = () => {
     return `${date.toLocaleString('en-US', { month: 'long', day: 'numeric' })}${suffix}`;
   };
 
-  const getDateFromDay = (day) => {
-    const now = new Date(); 
-    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()); 
-    const date = new Date(startDate); 
-    date.setDate(startDate.getDate() + day - 1); 
-    return getOrdinalDate(date); 
-  };
 
   const convertCommitData = (commitData) => {
     return commitData.map(({ day, commit }) => {
@@ -75,21 +68,36 @@ const CommitGrid = () => {
     }
   };
 
+  const getDateFromDay = (day) => {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + day - 1);
+    return date.toISOString().split('T')[0]; // Use ISO date for sorting
+  };
+  
+  const getDisplayDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const suffix = ['th', 'st', 'nd', 'rd'][(day % 10) > 3 ? 0 : (day % 100 - day % 10 !== 10) * (day % 10)] || 'th';
+    return `${date.toLocaleString('en-US', { month: 'long', day: 'numeric' })}${suffix}`;
+  };
+  
   const renderCalendar = () => {
-    const design=convertCommitData(designData)
+    const sortedDesignData = [...designData].sort((a, b) => new Date(a.day) - new Date(b.day));
+  
     return (
       <div className="grid grid-cols-7 gap-2 mt-4">
-        {design.map(({ day, commit }, index) => (
-            
+        {sortedDesignData.map(({ day, commit }, index) => (
           <div
             key={index}
-            className={`p-2 ${commit==0?? 'hidden'} rounded-md text-white`}
+            className={`p-2 ${commit === 0 ? 'hidden' : ''} rounded-md text-white`}
             style={{
               backgroundColor: getColor(commit),
               textAlign: "center",
             }}
           >
-            <span className="block text-xs">Day: {day}</span>
+            <span className="block text-xs">Day: {getDisplayDate(day)}</span>
             <span className="block text-sm">Commit: {commit}</span>
           </div>
         ))}
