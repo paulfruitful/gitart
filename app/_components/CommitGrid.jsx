@@ -62,22 +62,68 @@ const CommitGrid = () => {
       link.click();
     });
   };
-
+  const generateICSFile = () => {
+    if (designData.length === 0) {
+      alert("No events to export!");
+      return;
+    }
+  
+    const formatDate = (date) => {
+      return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    };
+  
+    const now = new Date();
+  
+    let icsContent = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\n`;
+  
+    designData.forEach(({ day, commit }, index) => {
+      const eventStart = `${day.replace(/-/g, "")}T090000Z`;
+      const eventEnd = `${day.replace(/-/g, "")}T100000Z`;
+      const title = `Development Commit Intensity: ${commit}`;
+      
+      icsContent += `BEGIN:VEVENT\r\n`;
+      icsContent += `UID:event-${index}@commitgrid\r\n`;
+      icsContent += `DTSTAMP:${formatDate(now)}\r\n`;
+      icsContent += `SUMMARY:${title}\r\n`;
+      icsContent += `DTSTART:${eventStart}\r\n`;
+      icsContent += `DTEND:${eventEnd}\r\n`;
+      icsContent += `DESCRIPTION:Development commitment intensity level for this day\r\n`;
+      icsContent += `END:VEVENT\r\n`;
+    });
+  
+    icsContent += `END:VCALENDAR\r\n`;
+  
+    const blob = new Blob([icsContent], { type: "text/calendar" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "commit_calendar_events.ics";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  
   const exportToGoogleCalendar = () => {
     const baseURL = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+    
+    if (designData.length === 0) {
+      alert("No events to export!");
+      return;
+    }
+  
     designData.forEach(({ day, commit }) => {
-      const eventStart = `${day}T09:00:00`;
-      const eventEnd = `${day}T10:00:00`;
+      const eventStart = `${day}T09:00:00Z`;
+      const eventEnd = `${day}T10:00:00Z`;
       const title = `Development Commit Intensity: ${commit}`;
-
+      
       const calendarLink = `${baseURL}&text=${encodeURIComponent(
         title
-      )}&dates=${eventStart.replace(/-/g, "")}/${eventEnd.replace(/-/g, "")}`;
-
+      )}&dates=${eventStart.replace(/[-:Z]/g, "")}/${eventEnd.replace(/[-:Z]/g, "")}`;
+  
       window.open(calendarLink, "_blank");
     });
   };
-
+  
   const getDisplayDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -140,7 +186,7 @@ const CommitGrid = () => {
         </button>
         <button
           className="px-4 py-2 bg-green-600 text-white rounded-md"
-          onClick={exportToGoogleCalendar}
+          onClick={generateICSFile}
         >
           Export to Google Calendar
         </button>
