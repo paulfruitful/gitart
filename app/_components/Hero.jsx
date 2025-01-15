@@ -74,8 +74,8 @@ const Hero = () => {
         <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-[#00d9d9]">
           Design Your GitHub Contributions
         </h1>
-        <p className="text-lg sm:text-xl mb-6 text-[#b0b0b0]">
-          Give your GitHub Commits Beauty, a Pattern, and a Style
+        <p className="text-lg sm:text-xl mb-6 text-white">
+          Give your GitHub Contributions Beauty, a Pattern, ande a Style
         </p>
         <a
           href="#grid"
