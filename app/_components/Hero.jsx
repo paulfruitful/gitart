@@ -51,7 +51,6 @@ const Hero = () => {
 
     animate();
 
-    // Handle canvas resize
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -75,7 +74,7 @@ const Hero = () => {
           Design Your GitHub Contributions
         </h1>
         <p className="text-lg sm:text-xl mb-6 text-white">
-          Give your GitHub Contributions Beauty, a Pattern, ande a Style
+          Give your GitHub Contributions Beauty, a Pattern, and Style
         </p>
         <a
           href="#grid"
